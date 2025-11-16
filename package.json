@@ -1,12 +1,24 @@
 {
   "name": "tsn-parser",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "TypeScript Notation - JSON alternative with TS syntax",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "tsn-parser": "dist/cli.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hteslol/tsn-parser.git"
+  },
+  "homepage": "https://github.com/hteslol/tsn-parser#readme",
+  "bugs": {
+    "url": "https://github.com/hteslol/tsn-parser/issues"
+  },
   "scripts": {
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "test": "echo \"No tests yet\" && exit 0"
   },
   "files": [
     "dist",

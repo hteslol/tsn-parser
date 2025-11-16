@@ -1,5 +1,9 @@
 # TSON Parser
 
+[![npm version](https://badge.fury.io/js/tsn-parser.svg)](https://badge.fury.io/js/tsn-parser)
+[![CI](https://github.com/hteslol/tsn-parser/workflows/CI/badge.svg)](https://github.com/hteslol/tsn-parser/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 TypeScript Notation (TSON) - A JSON alternative that uses TypeScript syntax for cleaner, more readable data representation.
 
 ## What is TSON?
@@ -31,6 +35,19 @@ TSON allows you to write data using TypeScript syntax instead of JSON, making it
 
 ```bash
 npm install tsn-parser
+```
+
+## CLI Usage
+
+```bash
+# Parse TSON file to JSON
+npx tsn-parser parse config.tsn
+
+# Validate TSON syntax
+npx tsn-parser validate data.tsn
+
+# Convert JSON to TSON
+npx tsn-parser convert package.json
 ```
 
 ## Usage
