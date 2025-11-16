@@ -113,12 +113,22 @@ Converts a JavaScript object to TSON format.
   - `obj`: The object to convert
 - **Returns:** The TSON string representation
 
+### `createParseStream<T>(): Transform`
+
+Creates a streaming parser for large TSON files.
+
+- **Returns:** A Transform stream that parses TSON objects
+- **Type Parameter:** `T` - Optional type for parsed objects
+
 ## Features
 
 - ✅ Clean TypeScript-like syntax
 - ✅ Type-safe parsing with generics
 - ✅ Bidirectional conversion (parse/stringify)
 - ✅ Lightweight and fast
+- ✅ Transform caching for better performance
+- ✅ Streaming support for large files
+- ✅ Optimized string processing
 - ✅ No external runtime dependencies (uses esbuild for parsing)
 
 ## Examples
@@ -167,6 +177,21 @@ TSON is perfect for configuration files that need to be human-readable:
   },
   features: ["auth", "logging", "metrics"]
 }
+```
+
+### Streaming Large Files
+
+```typescript
+import { createParseStream } from 'tsn-parser';
+import { createReadStream } from 'fs';
+
+const parseStream = createParseStream<{ id: number; name: string }>();
+
+createReadStream('large-data.tsn')
+  .pipe(parseStream)
+  .on('data', (obj) => {
+    console.log('Parsed object:', obj);
+  });
 ```
 
 ## Why TSON?
