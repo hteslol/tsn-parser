@@ -1,5 +1,4 @@
 {
-  name: "Test",
-  age: 25, // comment
-  active: true
+  name: JSON Test"
+  "version: "1.0.0"
 }
