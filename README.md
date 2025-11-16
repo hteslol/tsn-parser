@@ -19,10 +19,11 @@ TSON allows you to write data using TypeScript syntax instead of JSON, making it
 **TSON:**
 ```typescript
 {
-  name: "John Doe",
+  name: "John Doe", // Comments supported!
   age: 30,
   active: true,
-  tags: ["developer", "typescript"]
+  tags: ["developer", "typescript"], // Trailing commas allowed
+  /* Block comments too */
 }
 ```
 
@@ -105,13 +106,23 @@ Parses a TSON string into a JavaScript object.
 - **Returns:** The parsed JavaScript object
 - **Type Parameter:** `T` - Optional type for the return value
 
-### `stringify(obj: any): string`
+### `stringify(obj: any, options?: { preserveFunctions?: boolean }): string`
 
 Converts a JavaScript object to TSON format.
 
 - **Parameters:**
   - `obj`: The object to convert
+  - `options`: Optional configuration
+    - `preserveFunctions`: Keep function expressions in output
 - **Returns:** The TSON string representation
+
+### `validate(tsn: string): { valid: boolean; error?: string }`
+
+Validates TSON syntax without parsing.
+
+- **Parameters:**
+  - `tsn`: The TSON string to validate
+- **Returns:** Validation result with error details
 
 ### `createParseStream<T>(): Transform`
 
@@ -123,9 +134,13 @@ Creates a streaming parser for large TSON files.
 ## Features
 
 - ✅ Clean TypeScript-like syntax
+- ✅ Comments support (`//` and `/* */`)
+- ✅ Trailing commas allowed
+- ✅ Template literals with backticks
+- ✅ Function expressions (optional)
 - ✅ Type-safe parsing with generics
 - ✅ Bidirectional conversion (parse/stringify)
-- ✅ Lightweight and fast
+- ✅ Syntax validation
 - ✅ Transform caching for better performance
 - ✅ Streaming support for large files
 - ✅ Optimized string processing
@@ -133,30 +148,43 @@ Creates a streaming parser for large TSON files.
 
 ## Examples
 
-### Complex Data Structures
+### Advanced Features
 
 ```typescript
-const complexData = parse(`{
+// Comments and trailing commas
+const data = parse(`{
+  // User configuration
   users: [
     {
       id: 1,
       name: "Admin User",
-      permissions: ["read", "write", "delete"]
+      permissions: ["read", "write", "delete"], // trailing comma OK
     },
+    /* Another user */
     {
       id: 2,
-      name: "Regular User",
-      permissions: ["read"]
-    }
+      name: \`Regular User\`, // template literals
+      permissions: ["read"],
+    },
   ],
+  /* Settings block */
   settings: {
     maxUsers: 100,
-    features: {
-      darkMode: true,
-      notifications: false
-    }
-  }
+    validator: (user) => user.id > 0, // functions supported
+  },
 }`);
+
+// Function preservation
+const withFunctions = stringify({
+  name: "test",
+  handler: () => console.log("hello")
+}, { preserveFunctions: true });
+
+// Validation
+const result = validate(`{ name: "valid" }`);
+if (!result.valid) {
+  console.error(result.error);
+}```
 ```
 
 ### Configuration Files
