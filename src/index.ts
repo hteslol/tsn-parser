@@ -79,7 +79,7 @@ export function createParseStream<T = any>(): Transform {
   
   return new Transform({
     objectMode: true,
-    transform(chunk: Buffer, encoding, callback) {
+    transform(chunk: Buffer, encoding: BufferEncoding, callback: (error?: Error | null) => void) {
       buffer += chunk.toString();
       
       // Try to parse complete objects
@@ -106,7 +106,7 @@ export function createParseStream<T = any>(): Transform {
       callback();
     },
     
-    flush(callback) {
+    flush(callback: (error?: Error | null) => void) {
       if (buffer.trim()) {
         try {
           const parsed = parse<T>(buffer);
