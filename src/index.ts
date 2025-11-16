@@ -212,6 +212,9 @@ export function stringify(obj: any, options: StringifyOptions = {}): string {
   return result;
 }
 
+// Re-export performance functions
+export { parseIncremental, parseInWorker, parseParallel, stringifyOptimized } from './performance.js';
+
 export function createParseStream<T = any>(options: ParseOptions = {}): Transform {
   let buffer = '';
   

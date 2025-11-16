@@ -1,0 +1,13 @@
+{
+  "name": "tson-loader",
+  "version": "1.0.0",
+  "description": "Webpack loader for TSON files",
+  "main": "index.js",
+  "keywords": ["webpack", "loader", "tson", "typescript-notation"],
+  "author": "Seth DeSantis",
+  "license": "MIT",
+  "peerDependencies": {
+    "webpack": "^5.0.0",
+    "tsn-parser": "^1.5.0"
+  }
+}

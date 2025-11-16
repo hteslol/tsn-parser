@@ -1,0 +1,13 @@
+{
+  "name": "eslint-plugin-tson",
+  "version": "1.0.0",
+  "description": "ESLint plugin for TSON files",
+  "main": "index.js",
+  "keywords": ["eslint", "plugin", "tson", "typescript-notation"],
+  "author": "Seth DeSantis",
+  "license": "MIT",
+  "peerDependencies": {
+    "eslint": "^8.0.0",
+    "tsn-parser": "^1.5.0"
+  }
+}

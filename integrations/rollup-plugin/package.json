@@ -1,0 +1,13 @@
+{
+  "name": "rollup-plugin-tson",
+  "version": "1.0.0",
+  "description": "Rollup plugin for TSON files",
+  "main": "index.js",
+  "keywords": ["rollup", "plugin", "tson", "typescript-notation"],
+  "author": "Seth DeSantis",
+  "license": "MIT",
+  "peerDependencies": {
+    "rollup": "^3.0.0",
+    "tsn-parser": "^1.5.0"
+  }
+}
