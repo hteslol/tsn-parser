@@ -1,6 +1,6 @@
 {
   "name": "tsn-parser",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "TypeScript Notation - JSON alternative with TS syntax",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -36,11 +36,15 @@
   "author": "Seth DeSantis",
   "license": "MIT",
   "dependencies": {
+    "ajv": "^8.17.1",
     "esbuild": "^0.19.0"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.5",
     "typescript": "^5.0.0"
   }
 }

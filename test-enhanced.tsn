@@ -1,0 +1,11 @@
+{
+  // Test enhanced features
+  name: "Enhanced Test",
+  age: 30,
+  /* Multi-line
+     comment */
+  settings: {
+    theme: "dark",
+    enabled: true,
+  }
+}

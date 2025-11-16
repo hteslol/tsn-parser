@@ -114,32 +114,48 @@ const user = parse<User>(`{
 
 ## API Reference
 
-### `parse<T>(tsn: string): T`
+### `parse<T>(tsn: string, options?: ParseOptions): T | ParseResult<T>`
 
-Parses a TSON string into a JavaScript object.
+Parses a TSON string into a JavaScript object with enhanced error handling.
 
 - **Parameters:**
   - `tsn`: The TSON string to parse
-- **Returns:** The parsed JavaScript object
+  - `options`: Optional configuration
+    - `schema`: JSON Schema for validation
+    - `sourceMap`: Generate source map information
+- **Returns:** The parsed JavaScript object or ParseResult with source map
 - **Type Parameter:** `T` - Optional type for the return value
+- **Throws:** `TSONError` with line/column information on parse errors
 
-### `stringify(obj: any, options?: { preserveFunctions?: boolean }): string`
+### `stringify(obj: any, options?: StringifyOptions): string`
 
-Converts a JavaScript object to TSON format.
+Converts a JavaScript object to TSON format with advanced formatting options.
 
 - **Parameters:**
   - `obj`: The object to convert
   - `options`: Optional configuration
     - `preserveFunctions`: Keep function expressions in output
+    - `minify`: Generate compact output without whitespace
+    - `sourceMap`: Generate source map information
 - **Returns:** The TSON string representation
 
-### `validate(tsn: string): { valid: boolean; error?: string }`
+### `validate(tsn: string, schema?: object): { valid: boolean; error?: string }`
 
-Validates TSON syntax without parsing.
+Validates TSON syntax and optionally against a JSON Schema.
 
 - **Parameters:**
   - `tsn`: The TSON string to validate
+  - `schema`: Optional JSON Schema for validation
 - **Returns:** Validation result with error details
+
+### `validateDetailed(tsn: string, schema?: object): DetailedValidationResult`
+
+Provides detailed validation with line/column error information.
+
+- **Parameters:**
+  - `tsn`: The TSON string to validate
+  - `schema`: Optional JSON Schema for validation
+- **Returns:** Detailed validation result with position information
 
 ### `createParseStream<T>(): Transform`
 
@@ -157,6 +173,10 @@ Creates a streaming parser for large TSON files.
 - ✅ Function expressions (optional)
 - ✅ Type-safe parsing with generics
 - ✅ Bidirectional conversion (parse/stringify)
+- ✅ Enhanced error messages with line/column numbers
+- ✅ JSON Schema validation support
+- ✅ Minification for compact output
+- ✅ Source map generation
 - ✅ Syntax validation
 - ✅ CLI tool for file processing
 - ✅ Transform caching for better performance
@@ -169,40 +189,56 @@ Creates a streaming parser for large TSON files.
 ### Advanced Features
 
 ```typescript
-// Comments and trailing commas
+// Enhanced parsing with schema validation
+const schema = {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+    age: { type: "number", minimum: 0 }
+  },
+  required: ["name", "age"]
+};
+
 const data = parse(`{
   // User configuration
-  users: [
-    {
-      id: 1,
-      name: "Admin User",
-      permissions: ["read", "write", "delete"], // trailing comma OK
-    },
-    /* Another user */
-    {
-      id: 2,
-      name: \`Regular User\`, // template literals
-      permissions: ["read"],
-    },
-  ],
-  /* Settings block */
+  name: "Alice",
+  age: 25,
   settings: {
-    maxUsers: 100,
-    validator: (user) => user.id > 0, // functions supported
-  },
-}`);
+    theme: "dark",
+    notifications: true, // trailing comma OK
+  }
+}`, { schema, sourceMap: true });
+
+// Minified output
+const compact = stringify({
+  name: "Bob",
+  config: { enabled: true }
+}, { minify: true });
+// Output: {name:"Bob",config:{enabled:true}}
+
+// Enhanced error handling
+try {
+  parse(`{ invalid: syntax here }`);
+} catch (error) {
+  if (error instanceof TSONError) {
+    console.log(`Error at line ${error.line}, column ${error.column}`);
+  }
+}
+
+// Detailed validation
+const validation = validateDetailed(`{ name: 123 }`, schema);
+if (!validation.valid) {
+  validation.errors.forEach(err => {
+    console.log(`${err.message} at line ${err.line}`);
+  });
+}
 
 // Function preservation
 const withFunctions = stringify({
   name: "test",
   handler: () => console.log("hello")
 }, { preserveFunctions: true });
-
-// Validation
-const result = validate(`{ name: "valid" }`);
-if (!result.valid) {
-  console.error(result.error);
-}```
+```
 ```
 
 ### Configuration Files
@@ -272,6 +308,14 @@ Try TSON online at: `file://path/to/playground/index.html`
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Changelog
+
+### v1.5.0
+- Added enhanced error messages with line/column numbers
+- Added JSON Schema validation support
+- Added minification option for compact output
+- Added source map generation
+- Added detailed validation with position tracking
+- Enhanced TSONError class with position information
 
 ### v1.4.0
 - Added VS Code extension for .tsn files
