@@ -164,6 +164,34 @@ Creates a streaming parser for large TSON files.
 - **Returns:** A Transform stream that parses TSON objects
 - **Type Parameter:** `T` - Optional type for parsed objects
 
+### `parseIncremental<T>(content: string, key: string, options?: ParseOptions): T`
+
+Parses TSON with caching - only re-parses if content changed.
+
+- **Parameters:**
+  - `content`: The TSON string to parse
+  - `key`: Unique cache key for this content
+  - `options`: Optional parse configuration
+- **Returns:** Parsed object (cached if unchanged)
+
+### `parseInWorker<T>(content: string, options?: ParseOptions): Promise<T>`
+
+Parses TSON in a worker thread for non-blocking operation.
+
+- **Parameters:**
+  - `content`: The TSON string to parse
+  - `options`: Optional parse configuration
+- **Returns:** Promise resolving to parsed object
+
+### `parseParallel<T>(files: Array<{content: string, options?: ParseOptions}>, maxWorkers?: number): Promise<T[]>`
+
+Parses multiple TSON files in parallel using worker threads.
+
+- **Parameters:**
+  - `files`: Array of files to parse
+  - `maxWorkers`: Maximum concurrent workers (default: 4)
+- **Returns:** Promise resolving to array of parsed objects
+
 ## Features
 
 - ✅ Clean TypeScript-like syntax
@@ -182,6 +210,10 @@ Creates a streaming parser for large TSON files.
 - ✅ Transform caching for better performance
 - ✅ Streaming support for large files
 - ✅ Optimized string processing
+- ✅ Worker thread support for parallel processing
+- ✅ Incremental parsing for changed content only
+- ✅ Memory optimization with object pooling
+- ✅ Webpack, Rollup, ESLint, and Prettier integrations
 - ✅ No external runtime dependencies (uses esbuild for parsing)
 
 ## Examples
@@ -308,6 +340,16 @@ Try TSON online at: `file://path/to/playground/index.html`
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Changelog
+
+### v1.6.0
+- Added webpack loader (tson-loader)
+- Added Rollup plugin (rollup-plugin-tson)
+- Added ESLint plugin (eslint-plugin-tson)
+- Added Prettier plugin (prettier-plugin-tson)
+- Added worker thread support for parallel processing
+- Added incremental parsing for performance
+- Added memory optimization with object pooling
+- Added optimized stringify function
 
 ### v1.5.0
 - Added enhanced error messages with line/column numbers
