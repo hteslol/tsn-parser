@@ -1,25 +1,36 @@
 // src/index.ts
 import { transformSync } from 'esbuild';
-import { Readable, Transform } from 'stream';
+import { Transform } from 'stream';
 
 // Cache for esbuild transforms
 const transformCache = new Map<string, string>();
 
+// Preprocess TSON to handle comments
+function preprocessTSON(tsn: string): string {
+  return tsn
+    .replace(/\/\*[\s\S]*?\*\//g, '') // Block comments
+    .replace(/\/\/.*$/gm, ''); // Line comments
+}
+
 export function parse<T = any>(tsn: string): T {
-  // Check cache first
-  if (transformCache.has(tsn)) {
-    const cachedCode = transformCache.get(tsn)!;
+  const preprocessed = preprocessTSON(tsn);
+  
+  if (transformCache.has(preprocessed)) {
+    const cachedCode = transformCache.get(preprocessed)!;
     const fn = new Function('exports', cachedCode);
     const exports: any = {};
     fn(exports);
     return exports.default;
   }
 
-  const wrapped = `export default ${tsn}`;
-  const result = transformSync(wrapped, { loader: 'ts', format: 'cjs' });
+  const wrapped = `export default ${preprocessed}`;
+  const result = transformSync(wrapped, { 
+    loader: 'ts', 
+    format: 'cjs',
+    target: 'es2020'
+  });
   
-  // Cache the result
-  transformCache.set(tsn, result.code);
+  transformCache.set(preprocessed, result.code);
   
   const fn = new Function('exports', result.code);
   const exports: any = {};
@@ -27,9 +38,22 @@ export function parse<T = any>(tsn: string): T {
   return exports.default;
 }
 
-// Optimized stringify with single pass
-export function stringify(obj: any): string {
-  const json = JSON.stringify(obj, null, 2);
+export function stringify(obj: any, options: { preserveFunctions?: boolean } = {}): string {
+  const { preserveFunctions = false } = options;
+  
+  function replacer(key: string, value: any): any {
+    if (typeof value === 'function' && preserveFunctions) {
+      return `__FUNCTION__${value.toString()}__FUNCTION__`;
+    }
+    return value;
+  }
+  
+  let json = JSON.stringify(obj, replacer, 2);
+  
+  if (preserveFunctions) {
+    json = json.replace(/"__FUNCTION__(.*?)__FUNCTION__"/g, '$1');
+  }
+  
   let result = '';
   let inString = false;
   let escapeNext = false;
@@ -52,18 +76,15 @@ export function stringify(obj: any): string {
     
     if (char === '"') {
       if (!inString && nextChar && /[a-zA-Z_$]/.test(nextChar)) {
-        // Start of property name - skip quote
         inString = true;
         continue;
       } else if (inString && json[i + 1] === ':') {
-        // End of property name - skip quote
         inString = false;
         continue;
       }
     }
     
     if (char === ',' && nextChar === '\n') {
-      // Skip comma before newline
       continue;
     }
     
@@ -73,7 +94,6 @@ export function stringify(obj: any): string {
   return result;
 }
 
-// Streaming parser for large files
 export function createParseStream<T = any>(): Transform {
   let buffer = '';
   
@@ -82,7 +102,6 @@ export function createParseStream<T = any>(): Transform {
     transform(chunk: Buffer, encoding: BufferEncoding, callback: (error?: Error | null) => void) {
       buffer += chunk.toString();
       
-      // Try to parse complete objects
       let braceCount = 0;
       let start = 0;
       
@@ -120,10 +139,18 @@ export function createParseStream<T = any>(): Transform {
   });
 }
 
-// Clear cache when it gets too large
+export function validate(tsn: string): { valid: boolean; error?: string } {
+  try {
+    parse(tsn);
+    return { valid: true };
+  } catch (error) {
+    return { valid: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+// Clear cache periodically
 setInterval(() => {
   if (transformCache.size > 1000) {
     transformCache.clear();
   }
 }, 60000);
-
