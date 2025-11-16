@@ -75,11 +75,11 @@ export function parseIncremental<T = any>(
   // Clean old entries
   if (parseStateCache.size > 1000) {
     const cutoff = Date.now() - 300000; // 5 minutes
-    for (const [k, v] of parseStateCache.entries()) {
+    parseStateCache.forEach((v, k) => {
       if (v.lastModified < cutoff) {
         parseStateCache.delete(k);
       }
-    }
+    });
   }
   
   return result;
