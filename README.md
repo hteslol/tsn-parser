@@ -158,6 +158,7 @@ Creates a streaming parser for large TSON files.
 - ✅ Type-safe parsing with generics
 - ✅ Bidirectional conversion (parse/stringify)
 - ✅ Syntax validation
+- ✅ CLI tool for file processing
 - ✅ Transform caching for better performance
 - ✅ Streaming support for large files
 - ✅ Optimized string processing
@@ -254,3 +255,26 @@ MIT
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Changelog
+
+### v1.3.0
+- Added CLI tool (`npx tsn-parser`)
+- Added GitHub Actions CI/CD
+- Added repository info and badges
+- Enhanced package metadata
+
+### v1.2.0
+- Added comments support (`//` and `/* */`)
+- Added trailing commas support
+- Added template literals support
+- Added function expressions with `preserveFunctions` option
+- Added `validate()` function
+
+### v1.1.0
+- Added transform caching for better performance
+- Added streaming support with `createParseStream()`
+- Optimized `stringify()` with single-pass algorithm
+
+### v1.0.0
+- Initial release with basic parse/stringify functionality
