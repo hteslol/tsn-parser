@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-import { readFileSync, writeFileSync } from 'fs';
-import { parse, stringify, validate } from './index.js';
+const { readFileSync, writeFileSync } = require('fs');
+const { parse, stringify, validate } = require('./index.js');
 
 const args = process.argv.slice(2);
 const command = args[0];
@@ -40,9 +40,9 @@ try {
     case 'validate':
       const result = validate(content);
       if (result.valid) {
-        console.log('✅ Valid TSON syntax');
+        console.log('Valid TSON syntax');
       } else {
-        console.error('❌ Invalid TSON syntax:', result.error);
+        console.error('Invalid TSON syntax:', result.error);
         process.exit(1);
       }
       break;
@@ -52,7 +52,7 @@ try {
       const tson = stringify(json);
       const outFile = file.replace(/\.json$/, '.tsn');
       writeFileSync(outFile, tson);
-      console.log(`✅ Converted to ${outFile}`);
+      console.log(`Converted to ${outFile}`);
       break;
 
     default:

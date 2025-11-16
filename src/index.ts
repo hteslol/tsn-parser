@@ -16,26 +16,30 @@ export function parse<T = any>(tsn: string): T {
   const preprocessed = preprocessTSON(tsn);
   
   if (transformCache.has(preprocessed)) {
-    const cachedCode = transformCache.get(preprocessed)!;
-    const fn = new Function('exports', cachedCode);
-    const exports: any = {};
-    fn(exports);
-    return exports.default;
+    return transformCache.get(preprocessed)! as T;
   }
 
-  const wrapped = `export default ${preprocessed}`;
-  const result = transformSync(wrapped, { 
-    loader: 'ts', 
-    format: 'cjs',
-    target: 'es2020'
-  });
-  
-  transformCache.set(preprocessed, result.code);
-  
-  const fn = new Function('exports', result.code);
-  const exports: any = {};
-  fn(exports);
-  return exports.default;
+  try {
+    // Simple eval approach for basic TSON
+    const result = eval(`(${preprocessed})`);
+    transformCache.set(preprocessed, result);
+    clearCacheIfNeeded();
+    return result;
+  } catch (error) {
+    // Fallback to esbuild for complex cases
+    const wrapped = `export default ${preprocessed}`;
+    const buildResult = transformSync(wrapped, { 
+      loader: 'ts', 
+      format: 'cjs',
+      target: 'es2020'
+    });
+    
+    const fn = new Function('exports', 'module', buildResult.code + '; return exports.default;');
+    const mockModule = { exports: {} };
+    const result = fn(mockModule.exports, mockModule);
+    transformCache.set(preprocessed, result);
+    return result;
+  }
 }
 
 export function stringify(obj: any, options: { preserveFunctions?: boolean } = {}): string {
@@ -148,9 +152,9 @@ export function validate(tsn: string): { valid: boolean; error?: string } {
   }
 }
 
-// Clear cache periodically
-setInterval(() => {
+// Clear cache when it gets too large (synchronous check)
+function clearCacheIfNeeded() {
   if (transformCache.size > 1000) {
     transformCache.clear();
   }
-}, 60000);
+}

@@ -7,6 +7,11 @@
     "vscode": "^1.74.0"
   },
   "categories": ["Programming Languages"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hteslol/tsn-parser.git"
+  },
+  "publisher": "hteslol",
   "contributes": {
     "languages": [{
       "id": "tson",

@@ -1,0 +1,5 @@
+{
+  name: "Test",
+  age: 25, // comment
+  active: true
+}

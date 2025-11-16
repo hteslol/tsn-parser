@@ -1,0 +1,47 @@
+{
+  // User configuration with comments
+  name: "Alice Johnson",
+  age: 28,
+  active: true,
+  
+  /* Personal details */
+  contact: {
+    email: "alice@example.com",
+    phone: "+1-555-0123",
+    address: `123 Main St
+    Anytown, USA`, // template literal
+  },
+  
+  // Skills and preferences
+  skills: [
+    "JavaScript",
+    "TypeScript", 
+    "React",
+    "Node.js", // trailing comma allowed
+  ],
+  
+  /* Configuration object */
+  settings: {
+    theme: "dark",
+    notifications: true,
+    language: "en-US",
+    maxRetries: 3,
+  },
+  
+  // Function example (if preserveFunctions is enabled)
+  validator: (data) => data.age >= 18,
+  
+  // Nested objects work too
+  projects: [
+    {
+      name: "TSON Parser",
+      status: "active",
+      contributors: ["Alice", "Bob"],
+    },
+    {
+      name: "Web App",
+      status: "completed",
+      tags: ["react", "typescript"],
+    },
+  ],
+}
