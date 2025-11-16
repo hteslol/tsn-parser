@@ -1,0 +1,23 @@
+{
+  "name": "tson-language-support",
+  "displayName": "TSON Language Support",
+  "description": "Language support for TSON (TypeScript Notation) files",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": ["Programming Languages"],
+  "contributes": {
+    "languages": [{
+      "id": "tson",
+      "aliases": ["TSON", "tson"],
+      "extensions": [".tsn", ".tson"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "tson",
+      "scopeName": "source.tson",
+      "path": "./syntaxes/tson.tmLanguage.json"
+    }]
+  }
+}

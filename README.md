@@ -252,11 +252,32 @@ createReadStream('large-data.tsn')
 
 MIT
 
+## VS Code Extension
+
+Install the TSON Language Support extension for syntax highlighting:
+
+```bash
+cd vscode-extension
+npm install -g vsce
+vsce package
+code --install-extension tson-language-support-0.1.0.vsix
+```
+
+## Online Playground
+
+Try TSON online at: `file://path/to/playground/index.html`
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Changelog
+
+### v1.4.0
+- Added VS Code extension for .tsn files
+- Added online playground/demo
+- Added semantic versioning with changesets
+- Enhanced developer tooling
 
 ### v1.3.0
 - Added CLI tool (`npx tsn-parser`)

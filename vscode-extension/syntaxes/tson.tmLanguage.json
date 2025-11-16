@@ -1,0 +1,70 @@
+{
+  "name": "TSON",
+  "scopeName": "source.tson",
+  "patterns": [
+    { "include": "#comments" },
+    { "include": "#strings" },
+    { "include": "#numbers" },
+    { "include": "#keywords" },
+    { "include": "#functions" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.double-slash.tson",
+          "match": "//.*$"
+        },
+        {
+          "name": "comment.block.tson",
+          "begin": "/\\*",
+          "end": "\\*/"
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "name": "string.quoted.double.tson",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            { "name": "constant.character.escape.tson", "match": "\\\\." }
+          ]
+        },
+        {
+          "name": "string.quoted.single.tson",
+          "begin": "'",
+          "end": "'",
+          "patterns": [
+            { "name": "constant.character.escape.tson", "match": "\\\\." }
+          ]
+        },
+        {
+          "name": "string.template.tson",
+          "begin": "`",
+          "end": "`",
+          "patterns": [
+            { "name": "constant.character.escape.tson", "match": "\\\\." }
+          ]
+        }
+      ]
+    },
+    "numbers": {
+      "name": "constant.numeric.tson",
+      "match": "\\b\\d+(\\.\\d+)?\\b"
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "constant.language.tson",
+          "match": "\\b(true|false|null|undefined)\\b"
+        }
+      ]
+    },
+    "functions": {
+      "name": "meta.function.tson",
+      "match": "\\b\\w+\\s*=>|\\bfunction\\b"
+    }
+  }
+}
